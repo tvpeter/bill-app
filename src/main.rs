@@ -1,4 +1,4 @@
-use std::{collections::HashMap, io};
+use std::io;
 
 fn user_input() -> Option<String> {
     let mut buffer = String::new();
@@ -36,9 +36,9 @@ fn get_bill_amount() -> Option<f64> {
 }
 
 mod menu {
-    use crate::{Bills, user_input, Bill};
+    use crate::{Bills, user_input, Bill, get_bill_amount};
 
-    fn add_bill(bills: &mut Bills) {
+    pub fn add_bill(bills: &mut Bills) {
         println!("Bill name: ");
         let name = match user_input() {
             Some(input) => input,
@@ -46,7 +46,7 @@ mod menu {
         };
 
         println!("Enter amount: ");
-        let amount = match user_input() {
+        let amount = match get_bill_amount() {
             Some(amount) => amount,
             None => return,
         };
@@ -54,6 +54,12 @@ mod menu {
         let bill = Bill { name, amount };
         bills.add(bill);
         println!("Bill added");
+    }
+
+    pub fn view_bills (bills: &Bills) {
+        for bill in bills.get_all() {
+            println!("Bill: {:?}, amount: {:?}", bill.name, bill.amount);
+        }
     }
 }
 
@@ -106,13 +112,15 @@ impl Bills {
 }
 
 fn main() {
+
+    let mut bills = Bills::new();
     
     loop {
         MainMenu::show();
         let input = user_input().expect("no data entered");
         match MainMenu::from_str(input.as_str()) {
-            Some(MainMenu::AddBill) => (),
-            Some(MainMenu::ViewBill) => (),
+            Some(MainMenu::AddBill) => menu::add_bill(&mut bills),
+            Some(MainMenu::ViewBill) => menu::view_bills(&bills),
             None => return,
         }
     }
