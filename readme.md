@@ -23,3 +23,7 @@ User stories:
 - A vector is the easiest way to store the bills at stage 1, but a hashmap will be easier to work with at stages 2 and 3.
 
 
+#### To RUN APP
+- Run `make run` to start the app
+- Run `make check` to check for errors
+
